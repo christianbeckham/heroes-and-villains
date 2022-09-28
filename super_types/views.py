@@ -21,9 +21,14 @@ def super_types_list(request):
         return Response(serializer.data, status=status.HTTP_201_CREATED)
 
 
-@api_view(['GET'])
+@api_view(['GET', 'PUT'])
 def super_types_detail(request, pk):
     type = get_object_or_404(SuperType, pk=pk)
     if request.method == 'GET':
         serializer = SuperTypeSerializer(type)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    elif request.method == 'PUT':
+        serializer = SuperTypeSerializer(type, data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
